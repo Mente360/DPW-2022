@@ -167,9 +167,12 @@ public class FrmManteProd extends JFrame {
 		// select .... from .... where ....
 		Producto p = em.find(Producto.class, leerCodigoProducto());
 		// devuelve un Objeto si existe el ID, sino devuelve null
+		
+		txtSalida.setText("");
 
 		if (p == null)
-			System.err.println("ID no existe");
+			
+			txtSalida.setText("Producto no existe");
 		else {
 			txtDescripcion.setText(p.getDes_prod());
 			txtStock.setText("" + p.getStk_prod());
