@@ -62,7 +62,7 @@ public class FrmManteProd extends JFrame {
 	public FrmManteProd() {
 		setTitle("Mantenimiento de Productos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 463, 390);
+		setBounds(100, 100, 461, 413);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -90,7 +90,7 @@ public class FrmManteProd extends JFrame {
 				listado();
 			}
 		});
-		btnListado.setBounds(177, 322, 89, 23);
+		btnListado.setBounds(172, 337, 89, 23);
 		contentPane.add(btnListado);
 
 		txtCódigo = new JTextField();
@@ -138,11 +138,11 @@ public class FrmManteProd extends JFrame {
 		contentPane.add(txtPrecio);
 
 		JLabel lblProveedor = new JLabel("Proveedor:");
-		lblProveedor.setBounds(255, 106, 59, 14);
+		lblProveedor.setBounds(250, 134, 59, 14);
 		contentPane.add(lblProveedor);
 
 		cboProveedor = new JComboBox();
-		cboProveedor.setBounds(324, 102, 100, 22);
+		cboProveedor.setBounds(324, 130, 100, 22);
 		contentPane.add(cboProveedor);
 
 		JButton btnBuscar = new JButton("Buscar");
@@ -151,10 +151,41 @@ public class FrmManteProd extends JFrame {
 				buscarProducto();
 			}
 		});
-		btnBuscar.setBounds(324, 71, 100, 21);
+		btnBuscar.setBounds(324, 59, 100, 21);
 		contentPane.add(btnBuscar);
 
+		JButton btnActualizar = new JButton("Actualizar");
+		btnActualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				actualizarProducto();
+			}
+		});
+		btnActualizar.setBounds(324, 90, 100, 21);
+		contentPane.add(btnActualizar);
+
 		llenaCombo();
+	}
+
+	void actualizarProducto() {
+		
+		Producto p = new Producto();
+		p.setId_prod(leerCodigoProducto());
+		p.setDes_prod(leerDescripcion());
+		p.setIdcategoria(leerCboCategoria());
+		p.setEst_prod(leerEstado());
+		p.setStk_prod(leerStrock());
+		p.setPre_prod(leerPrecio());
+		p.setIdprovedor(leerCboProveedor());
+		
+		EntityManagerFactory fabrica = Persistence.createEntityManagerFactory("mysql");
+		EntityManager em = fabrica.createEntityManager();
+		em.getTransaction().begin();
+		Producto ok = em.merge(p);
+		em.getTransaction().commit();
+		em.close();
+		JOptionPane.showMessageDialog(this, "Prodcuto actualizado");
+		
+
 	}
 
 	void buscarProducto() {
@@ -167,11 +198,11 @@ public class FrmManteProd extends JFrame {
 		// select .... from .... where ....
 		Producto p = em.find(Producto.class, leerCodigoProducto());
 		// devuelve un Objeto si existe el ID, sino devuelve null
-		
+
 		txtSalida.setText("");
 
 		if (p == null)
-			
+
 			txtSalida.setText("Producto no existe");
 		else {
 			txtDescripcion.setText(p.getDes_prod());
